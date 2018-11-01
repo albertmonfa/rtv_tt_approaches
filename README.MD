@@ -65,7 +65,7 @@ to resolve the same problem, with itself strengths and weakness.
 For each approach you can see the evolution in the architectures and some tools and best practices
 like:
 
-* **Automatition**: I used Ansible for everything in the Vagrant side and Terraform for AWS.
+* **Automation**: I used Ansible for everything in the Vagrant side and Terraform for AWS.
 * **Docker Friendly**: Docker is first of all a package system to delivery our applications,
   likewise docker is very flexible and sometimes is not used in the correct way, I put all my bests
   to ensure some best practice designing Dockers like:
