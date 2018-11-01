@@ -1,5 +1,4 @@
-# TheAPP some aproaches from SRE/Systems Engineer side to resolve
-a common challenge.
+# TheAPP: some approaches from SRE/Systems Engineer  side to resolve a common challenge.
 
 ## Disclamer
 This solution is under construction yet, but PR and comments are
