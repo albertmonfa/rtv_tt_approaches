@@ -1,0 +1,6 @@
+#
+####### api_flash Python 2.7 Requeriments #######
+#
+flask == 0.12
+flask-mysql == 1.4.0
+#

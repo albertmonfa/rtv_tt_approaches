@@ -1,0 +1,9 @@
+---
+
+- include: "{{ app_population_item }}"
+  with_fileglob:
+    - ./population/*
+  loop_control:
+    loop_var: app_population_item
+
+...

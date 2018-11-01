@@ -1,0 +1,18 @@
+- hosts: localhost
+  become: yes
+  gather_facts: yes
+  connection: paramiko
+
+  roles:
+    - {"role": common, "role_action": "provision"}
+    - {"role": common, "role_action": "configure"}
+    - {"role": docker, "role_action": "provision"}
+    - {"role": vagrant, "role_action": "provision"}
+    - {"role": vagrant, "role_action": "configure"}
+    - {"role": percona, "role_action": "provision"}
+    - {"role": percona, "role_action": "configure"}
+    - {"role": app, "role_action": "provision"}
+    - {"role": app, "role_action": "population"}
+    - {"role": app, "role_action": "configure"}
+    - {"role": rev_proxy, "role_action": "provision"}
+    - {"role": rev_proxy, "role_action": "configure"}

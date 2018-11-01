@@ -1,0 +1,9 @@
+---
+
+- include: "{{ percona_decommission_item }}"
+  with_fileglob:
+    - ./decommission/*
+  loop_control:
+    loop_var: percona_decommission_item
+
+...

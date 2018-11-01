@@ -1,0 +1,58 @@
+---
+
+- include_vars: /vagrant/workspace/ansible/aws_networking.yml
+  ignore_errors: yes
+
+- name: Generating main.tf for aws_rds
+  template:
+    src: /vagrant/ansible/roles/ecs/./templates/terraform/aws_rds/main.j2
+    dest: /terraform/projects/aws_rds/main.tf
+  tags:
+    - role_ecs_rds
+    - role_ecs_generate_tfs
+
+- name: Generating output.tf for aws_rds
+  template:
+    src: /vagrant/ansible/roles/ecs/./templates/terraform/aws_rds/output.j2
+    dest: /terraform/projects/aws_rds/output.tf
+  tags:
+    - role_ecs_rds
+    - role_ecs_generate_tfs
+
+- name: Generating variables.tf for aws_rds
+  template:
+    src: /vagrant/ansible/roles/ecs/./templates/terraform/aws_rds/variables.j2
+    dest: /terraform/projects/aws_rds/variables.tf
+  tags:
+    - role_ecs_rds
+    - role_ecs_generate_tfs
+
+- name: Generating variables.tfvars for aws_rds
+  template:
+    src: /vagrant/ansible/roles/ecs/./templates/terraform/aws_rds/variables.tfvars.j2
+    dest: /terraform/projects/aws_rds/variables.tfvars
+  tags:
+    - role_ecs_rds
+    - role_ecs_generate_tfs
+
+- name: "Provision AWS rds"
+  terraform:
+    force_init: yes
+    project_path: /terraform/projects/aws_rds
+    variables_file: variables.tfvars
+    state: present
+  environment: "{{ aws_credentials }}"
+  register: outs_aws_rds
+  tags:
+     - role_ecs_terraform_rds
+     - role_ecs_apply_terraform
+
+- name: Saving status in the Vagrant Workspace
+  template:
+    src: /vagrant/ansible/roles/ecs/./templates/varfiles/aws_rds.j2
+    dest: /vagrant/workspace/ansible/aws_rds.yml
+  tags:
+    - role_ecs_terraform_rds
+    - role_ecs_apply_terraform
+
+...

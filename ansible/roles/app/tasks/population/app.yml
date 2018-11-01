@@ -1,0 +1,29 @@
+---
+
+- name: Creating DB Schemes for TheAPP
+  mysql_db:
+   name: "{{ theapp_db }}"
+   login_password: "{{ mysql_root }}"
+   login_user: root
+   login_host: 127.0.0.1
+   login_port: 3306
+   state: import
+   target: "/usr/local/theapp/app.sql"
+
+- name: Set user privileges for TheAPP
+  mysql_user:
+    login_password: "{{ mysql_root }}"
+    login_user: root
+    login_host: 127.0.0.1
+    login_port: 3306
+    user: "{{ theapp_user }}"
+    password: "{{ theapp_pass }}"
+    state: present
+    append_privs: yes
+    priv: "{{ theapp_db_priv_item }}"
+  with_items:
+    - '{{ theapp_db }}.*:ALL'
+  loop_control:
+    loop_var: theapp_db_priv_item
+
+...

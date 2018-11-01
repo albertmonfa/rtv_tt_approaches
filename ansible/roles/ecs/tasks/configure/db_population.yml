@@ -1,0 +1,40 @@
+---
+
+- include_vars: /vagrant/workspace/ansible/aws_bastion.yml
+  ignore_errors: yes
+
+- include_vars: /vagrant/workspace/ansible/aws_rds.yml
+  ignore_errors: yes
+
+- include_vars: /vagrant/workspace/ansible/aws_ecr.yml
+  ignore_errors: yes
+
+- name: "Add {{ bastion_host }} to the Ansible Inventory"
+  add_host:
+    hostname: "{{ bastion_name }}"
+    ansible_host: "{{ bastion_ip }}"
+    ansible_port: "{{ bastion_port }}"
+    ansible_user: "{{ bastion_user }}"
+  tags:
+    - role_ecs_db_population
+
+- name: Login To AWS ECR
+  shell: "$(/usr/bin/aws ecr get-login --no-include-email)"
+  args:
+    executable: /bin/bash
+  become: yes
+  delegate_to: "{{ bastion_name }}"
+  environment: "{{ aws_credentials }}"
+  tags:
+    - role_ecs_db_population
+
+- name: Populate Database
+  shell: docker run -d -e "WAIT_FOR_DB=Yes" -e "POPULATE_APP=Yes" -e "MYSQL_USER={{ rds_db_user }}" -e "MYSQL_DB={{ rds_db_name }}" -e "MYSQL_PASS={{ rds_db_password }}" -e "MYSQL_HOST={{ rds_db_address }}" {{ theapp_ecr_image }}
+  args:
+    executable: /bin/bash
+  become: yes
+  delegate_to: "{{ bastion_name }}"
+  tags:
+    - role_ecs_db_population
+
+...

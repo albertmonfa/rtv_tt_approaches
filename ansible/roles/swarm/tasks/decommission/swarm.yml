@@ -1,0 +1,30 @@
+---
+
+- name: Decommission TheApp Swarm Stack
+  docker_stack:
+    state: absent
+    name: theapp
+  tags: role_swarm_decommission
+
+- name: Decommission Infrastructure Swarm Stack
+  docker_stack:
+    state: absent
+    name: infra
+  tags: role_swarm_decommission
+
+- shell: "/bin/rm -rf /usr/local/swarm"
+  become: yes
+  ignore_errors: yes
+  tags: role_swarm_decommission
+
+- shell: "docker image prune -a"
+  become: yes
+  ignore_errors: yes
+  tags: role_swarm_decommission
+
+- shell: "docker swarm leave --force"
+  become: yes
+  ignore_errors: yes
+  tags: role_swarm_decommission
+
+...

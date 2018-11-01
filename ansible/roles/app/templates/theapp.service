@@ -1,0 +1,13 @@
+[Unit]
+Description = Service for TheAPP
+After = mysqld.target
+
+[Service]
+Type=simple
+RemainAfterExit=Yes
+ExecStart = /usr/local/theapp/theapp
+ExecStop = /usr/local/theapp/theapp-stop
+KillMode=process
+
+[Install]
+WantedBy = multi-user.target

@@ -1,0 +1,85 @@
+---
+
+ - name: Add Percona Official Repository
+   shell: yum -y install http://www.percona.com/downloads/percona-release/redhat/0.1-6/percona-release-0.1-6.noarch.rpm
+   ignore_errors: yes
+   become: yes
+   tags: role_percona
+
+ - shell: yum makecache fast
+   ignore_errors: yes
+   become: yes
+   tags: role_percona
+
+ - name: Installing Percona 5.7
+   package:
+     name: "{{ item }}"
+     state: present
+     update_cache: yes
+   become: yes
+   with_items:
+      - Percona-Server-server-57
+      - Percona-Server-client-57
+      - Percona-Server-devel-57
+   tags: role_percona
+
+ - pip:
+    name: MySQL-python
+   become: yes
+
+ - name: Stop Percona if its started
+   systemd:
+     name: mysqld
+     state: stopped
+   become: yes
+   tags: role_percona
+
+ - name: Set environment variables --skip-grant-tables
+   shell: systemctl set-environment MYSQLD_OPTS="--skip-grant-tables"
+   become: yes
+   tags: role_percona
+
+ - name: Start Percona with the new configuration
+   systemd:
+     name: mysqld
+     state: started
+   become: yes
+   tags: role_percona
+
+ - name: Change the root password for Percona
+   command:  mysql -u root --execute="UPDATE mysql.user SET authentication_string = PASSWORD('{{ root_password }}') WHERE User = 'root' AND Host = 'localhost';"
+   become: yes
+   tags: role_percona
+
+ - name: FLUSH Changes on Percona
+   command:  mysql -u root --execute="FLUSH PRIVILEGES"
+   become: yes
+   tags: role_percona
+
+ - name: Stop Percona if its started
+   systemd:
+     name: mysqld
+     state: stopped
+   become: yes
+   tags: role_percona
+
+ - name: Unset environment variables --skip-grant-tables
+   shell: systemctl unset-environment MYSQLD_OPTS
+   become: yes
+   tags: role_percona
+
+ - name: Enable and Starting Percona service
+   systemd:
+     name: mysqld
+     enabled: yes
+     masked: no
+     state: started
+   become: yes
+   tags: role_percona
+
+ - name: Percona Root Password Never Expire
+   command:  mysql --connect-expired-password -u root -p"{{ root_password }}" --execute="SET GLOBAL validate_password_policy=LOW; ALTER USER `root`@`localhost` IDENTIFIED BY '{{ root_password }}',`root`@`localhost` PASSWORD EXPIRE NEVER;"
+   become: yes
+   tags: role_percona
+
+...

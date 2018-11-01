@@ -1,0 +1,10 @@
+---
+
+- name: Enable service TheAPP and ensure it is not masked
+  systemd:
+    name: theapp
+    state: started
+  become: yes
+  tags: role_app_provision
+
+...

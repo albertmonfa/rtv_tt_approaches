@@ -1,0 +1,30 @@
+---
+
+- name: "Decommission AWS rds"
+  terraform:
+    force_init: yes
+    project_path: /terraform/projects/aws_rds
+    variables_file: variables.tfvars
+    state: absent
+  environment: "{{ aws_credentials }}"
+  register: outs_aws_rds
+  tags:
+     - role_ecs_terraform_rds
+     - role_ecs_apply_terraform
+
+- stat: path=/vagrant/workspace/ansible/aws_rds.yml
+  register: aws_rds_file_stat
+  tags:
+     - role_ecs_terraform_rds
+     - role_ecs_apply_terraform
+
+- name: Deleting status in the Vagrant Workspace
+  file:
+    path: /vagrant/workspace/ansible/aws_rds.yml
+    state: absent
+  when: aws_rds_file_stat.stat.exists == True
+  tags:
+     - role_ecs_terraform_rds
+     - role_ecs_apply_terraform
+
+...

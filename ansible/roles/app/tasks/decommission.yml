@@ -1,0 +1,9 @@
+---
+
+- include: "{{ app_decommission_item }}"
+  with_fileglob:
+    - ./decommission/*
+  loop_control:
+    loop_var: app_decommission_item
+
+...

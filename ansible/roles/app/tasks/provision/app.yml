@@ -1,0 +1,96 @@
+---
+
+- name: Create theapp User
+  user:
+    name: theapp
+    generate_ssh_key: yes
+    ssh_key_bits: 2048
+    ssh_key_file: .ssh/id_rsa
+  tags: role_app_provision
+
+- file:
+    path: /usr/local/theapp/
+    owner: theapp
+    state: directory
+    mode: 0755
+  tags: role_app_provision
+
+- git:
+    repo: "{{ theapp_repo }}"
+    dest: /usr/local/theapp/
+  tags: role_app_provision
+
+- file:
+    dest: /usr/local/theapp/
+    owner: theapp
+    group: nobody
+    mode: u=rwX,g=rX,o=rX
+    recurse: yes
+  tags: role_app_provision
+
+- name: Copy Requeriments file
+  copy:
+    src: ../../../docker/api_flask/conf/requirements.txt
+    dest: /usr/local/theapp/requirements.txt
+    owner: theapp
+    group: nobody
+    mode: 0644
+
+- name: Copy TheAPP config
+  template:
+    src: ./templates/theapp.conf
+    dest: /etc/theapp.conf
+    owner: theapp
+    group: nobody
+    mode: 0644
+  become: yes
+  tags: role_app_provision
+  notify:
+   - Restart App
+
+- name: Copy TheAPP execution script
+  copy:
+    src: ./templates/theapp.sh
+    dest: /usr/local/theapp/theapp
+    owner: theapp
+    group: nobody
+    mode: 0755
+  tags: role_app_provision
+  notify:
+   - Restart App
+
+- name: Copy TheAPP shutdown script
+  copy:
+    src: ./templates/theapp-stop.sh
+    dest: /usr/local/theapp/theapp-stop
+    owner: theapp
+    group: nobody
+    mode: 0755
+  tags: role_app_provision
+  notify:
+   - Restart App
+
+- pip:
+    requirements: /usr/local/theapp/requirements.txt
+  tags: role_app_provision
+
+- name: Installing TheAPP service
+  template:
+    src: ./templates/theapp.service
+    dest: /usr/lib/systemd/system/theapp.service
+    owner: root
+    group: root
+    mode: 0755
+  become: yes
+  tags: role_app_provision
+  notify:
+   - Restart App
+
+- name: Enable service TheAPP and ensure it is not masked
+  systemd:
+    name: theapp
+    enabled: yes
+    masked: no
+  tags: role_app_provision
+
+...

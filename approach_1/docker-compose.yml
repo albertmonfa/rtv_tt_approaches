@@ -1,0 +1,36 @@
+version: "3"
+
+services:
+  app_1:
+    container_name: app_approach_1
+    build:
+      context: ../
+      dockerfile: docker/api_flask/Dockerfile
+    environment:
+      - WAIT_FOR_DB=Yes
+      - POPULATE_APP=Yes
+      - MYSQL_USER=db_user
+      - MYSQL_PASS=secret
+      - MYSQL_DB=db_test
+      - MYSQL_HOST=db_1
+    ports:
+      - "5000:5000"
+    networks:
+      - net_app1
+    depends_on:
+      - db_1
+
+  db_1:
+    container_name: percona_approach_1
+    image: percona:5.7
+    networks:
+      - net_app1
+    environment:
+      - MYSQL_ROOT_PASSWORD=secret
+      - MYSQL_DATABASE=db_test
+      - MYSQL_USER=db_user
+      - MYSQL_PASSWORD=secret
+
+networks:
+  net_app1:
+    driver: bridge

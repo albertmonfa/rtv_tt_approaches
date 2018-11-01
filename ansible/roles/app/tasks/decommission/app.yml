@@ -1,0 +1,45 @@
+---
+
+- name: Stop service TheAPP
+  systemd: name=theapp state=stopped
+  become: yes
+  ignore_errors: yes
+  tags: role_app_provision
+
+- name: Enable service TheAPP and ensure it is not masked
+  systemd:
+    name: theapp
+    enabled: no
+    masked: no
+  become: yes
+  ignore_errors: yes
+  tags: role_app_provision
+
+- file:
+    path: /usr/lib/systemd/system/theapp.service
+    state: absent
+  become: yes
+  ignore_errors: yes
+  tags: role_app_provision
+
+- file:
+    path: /etc/theapp.conf
+    state: absent
+  become: yes
+  ignore_errors: yes
+  tags: role_app_provision
+
+- shell: "/bin/rm -rf /usr/local/theapp"
+  become: yes
+  ignore_errors: yes
+  tags: role_app_provision
+
+- name: Delete theapp User
+  user:
+    name: theapp
+    state: absent
+  become: yes
+  ignore_errors: yes
+  tags: role_app_provision
+
+...

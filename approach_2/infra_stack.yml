@@ -1,0 +1,69 @@
+version: '3.3'
+
+services:
+
+  registry:
+    image: registry:2
+    volumes:
+      - registry:/var/lib/registry
+    logging:
+      driver: json-file
+      options:
+        max-size: '10m'
+    networks:
+      - swarm-infra
+    ports:
+      - "4000:5000"
+    deploy:
+      replicas: 1
+      labels:
+        - APP=REGISTRY
+      resources:
+        limits:
+          cpus: '1'
+          memory: 256M
+        reservations:
+          cpus: '0.1'
+          memory: 128M
+      restart_policy:
+        condition: on-failure
+      update_config:
+        parallelism: 1
+        delay: 60s
+
+  portainer:
+    image: portainer/portainer
+    command: -H unix:///var/run/docker.sock
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock:rw
+      - portainer_data:/data
+    logging:
+      driver: json-file
+      options:
+        max-size: '10m'
+    ports:
+      - "9000:9000"
+    deploy:
+      replicas: 1
+      labels:
+        - APP=PORTAINER
+      resources:
+        limits:
+          cpus: '1'
+          memory: 256M
+        reservations:
+          cpus: '0.1'
+          memory: 128M
+      restart_policy:
+        condition: on-failure
+      update_config:
+        parallelism: 1
+        delay: 60s
+
+volumes:
+  portainer_data:
+  registry:
+
+networks:
+  swarm-infra:
+    driver: overlay

@@ -1,0 +1,2 @@
+rev_proxy_resolver: 127.0.0.1
+rev_proxy_pass: http://localhost:5000

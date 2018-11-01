@@ -1,0 +1,6 @@
+mysql_root: 0rootpass-_123 # lookup from consul,parameterstore ec2 etc...
+theapp_repo: https://github.com/wuakitv/sysadmin-challenge
+theapp_user: someuser
+theapp_pass: Sup3r_S3cur3_p4ss()__
+theapp_db: somedb
+theapp_db_host: 127.0.0.1

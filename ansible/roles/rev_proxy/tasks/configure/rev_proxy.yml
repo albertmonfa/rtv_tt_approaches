@@ -1,0 +1,35 @@
+---
+
+- name: Deploying Rev_Proxy Main config file
+  template:
+    src: ./templates/nginx.conf.j2
+    dest: /etc/nginx/nginx.conf
+    owner: nginx
+    group: nginx
+    mode: 0644
+  become: yes
+  tags: role_rev_proxy_provision
+  notify:
+   - Restart Rev_Proxy
+
+- name: Deploying Rev_Proxy TheAPP config file
+  template:
+    src: ./templates/theapp.conf.j2
+    dest: /etc/nginx/conf.d/theapp.conf
+    owner: nginx
+    group: nginx
+    mode: 0644
+  become: yes
+  tags: role_rev_proxy_provision
+  notify:
+   - Restart Rev_Proxy
+
+- name: Enable service TheAPP and ensure it is not masked
+  systemd:
+    name: nginx
+    enabled: yes
+    masked: no
+    state: started
+  tags: role_rev_proxy_provision
+
+...

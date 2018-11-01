@@ -1,0 +1,30 @@
+---
+
+- name: Percona Main config file
+  template:
+    src: templates/mysqld.conf.j2
+    dest: /etc/percona-server.conf.d/mysqld.cnf
+    owner: root
+    group: root
+    mode: 0644
+  notify:
+   - Restart Percona
+  become: yes
+
+- name: Percona Additional Configuration
+  template:
+    src: "./templates/my.conf.d/{{ item }}"
+    dest: "/etc/my.cnf.d/{{ item }}"
+    owner: root
+    group: root
+    mode: 0644
+  notify:
+   - Restart Percona
+  become: yes
+  with_items:
+    - logging.cnf
+  tags: role_percona
+
+  
+
+...

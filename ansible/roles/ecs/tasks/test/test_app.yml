@@ -1,0 +1,22 @@
+---
+
+- include_vars: /vagrant/workspace/ansible/aws_ecs_service.yml
+  ignore_errors: yes
+
+- name: "Wait until the ECS Task will be deployed"
+  uri:
+    url: "http://{{ ecs_service_alb_dns }}"
+    status_code: 200
+  register: result
+  until: result.status == 200
+  retries: 300
+  delay: 1
+
+- name: Common HTTP Test
+  uri:
+    url: "http://{{ ecs_service_alb_dns }}"
+    return_content: no
+    status_code: 200
+  with_sequence: 0-10
+
+...

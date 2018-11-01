@@ -1,0 +1,14 @@
+---
+
+ - name: Provisioning Nginx Webserver
+   package:
+     name: "{{ rev_proxy_pkg_item }}"
+     state: latest
+     update_cache: yes
+   become: yes
+   with_items:
+     - nginx
+   loop_control:
+     loop_var: rev_proxy_pkg_item
+
+...

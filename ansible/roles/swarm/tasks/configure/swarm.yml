@@ -1,0 +1,54 @@
+---
+
+- file:
+    path: /usr/local/swarm/
+    state: directory
+    mode: 0755
+  become: yes
+  tags: role_swarm_configure
+
+- name: Copy Swarm Infrastructure Compose
+  copy:
+    src: ../../../approach_2/infra_stack.yml
+    dest: /usr/local/swarm/infra_stack.yml
+    mode: 0644
+  tags: role_swarm_configure
+
+- name: Deploy Infrastructure Swarm Stack from file
+  docker_stack:
+    state: present
+    name: infra
+    compose:
+      - /usr/local/swarm/infra_stack.yml
+  tags: role_swarm_configure
+
+- synchronize:
+    src: ../../../docker/
+    dest: /usr/local/swarm/docker/
+  delegate_to: "{{ inventory_hostname }}"
+  tags: role_swarm_configure
+
+- name: Build TheApp Image and store in local
+  docker_image:
+    path: /usr/local/swarm/
+    dockerfile: /usr/local/swarm/docker/api_flask/Dockerfile
+    name: theapp
+    tag: latest
+  tags: role_swarm_configure
+
+- name: Copy Swarm TheApp Compose
+  copy:
+    src: ../../../approach_2/theapp_stack.yml
+    dest: /usr/local/swarm/theapp_stack.yml
+    mode: 0644
+  tags: role_swarm_configure
+
+- name: Deploy TheApp Swarm Stack from file
+  docker_stack:
+    state: present
+    name: theapp
+    compose:
+      - /usr/local/swarm/theapp_stack.yml
+  tags: role_swarm_configure
+
+...

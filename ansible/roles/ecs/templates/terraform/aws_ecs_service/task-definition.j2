@@ -1,0 +1,44 @@
+[
+  {
+    "volumesFrom": [],
+    "portMappings": [
+      {
+        "hostPort": 0,
+        "containerPort": 5000,
+        "protocol": "tcp"
+      }
+    ],
+    "environment": [
+              {
+                      "name": "WAIT_FOR_DB",
+                      "value": "Yes"
+              },
+              {
+                      "name": "POPULATE_APP",
+                      "value": "No"
+              },
+              {
+                      "name": "MYSQL_USER",
+                      "value": "{{ rds_db_user }}"
+              },
+              {
+                      "name": "MYSQL_PASS",
+                      "value": "{{ rds_db_password }}" 
+              },
+              {
+                      "name": "MYSQL_DB",
+                      "value": "{{ rds_db_name }}"
+              },
+              {
+                      "name": "MYSQL_HOST",
+                      "value": "{{ rds_db_address }}"
+              }
+    ],
+    "essential": true,
+    "mountPoints": [],
+    "name": "app_backend",
+    "image": "{{ theapp_ecr_image }}",
+    "cpu": 0,
+    "memoryReservation": 128
+  }
+]

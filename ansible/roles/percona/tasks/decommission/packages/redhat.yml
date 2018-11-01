@@ -1,0 +1,27 @@
+---
+
+ - name: Stopping Percona service
+   systemd:
+     name: mysqld
+     enabled: yes
+     masked: no
+     state: stopped
+   ignore_errors: yes
+   become: yes
+   tags: role_percona
+
+ - name: Removing Percona 5.7
+   package:
+     name: "{{ percona_pkg_item }}"
+     state: absent
+     update_cache: yes
+   become: yes
+   with_items:
+      - Percona-Server-server-57
+      - Percona-Server-client-57
+      - percona-release
+   tags: role_percona
+   loop_control:
+     loop_var: percona_pkg_item
+
+...

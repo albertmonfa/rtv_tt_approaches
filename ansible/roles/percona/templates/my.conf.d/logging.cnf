@@ -1,0 +1,2 @@
+log-error={{ join_buffer_size | mandatory }}
+pid-file={{ join_buffer_size | mandatory }}
