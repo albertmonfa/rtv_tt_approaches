@@ -124,7 +124,7 @@ ansible  approach_0  approach_1  approach_2  approach_3  doc  docker  README.MD 
 
 
 ## TODOs:
-* **Architectura Diagrams**: To understand better the different pieces and components for each approach.
+* **Architectural Diagrams**: To understand better the different pieces and components for each approach.
 * **Extra Doc about Autoscaling EC2 Instance**: In that approach I used ASG Lifecycles, Lambda Functions,
    SQS and ECS API to drain containers form some instance before scale down,
    ensuring the Zero Downtime. This approach is a little tricky and should be explained in detail.
