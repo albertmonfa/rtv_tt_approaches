@@ -46,20 +46,20 @@ vagrant plugin install vagrant-vbguest
           vagrant plugin install vagrant-vbguest;
           ```
 
-## What's an approach?.
+## What's an approach?
 I slipt across  several "approaches" for the challenge using for each one
 a different architecture and tools, each one might being saw in the
 real world. That means each approach is a different implementation
 to resolve the same problem, with itself strengths and weakness.
 
   * On **Approach** 0 is showed a simple VM provisioning a classic
-  stack NGINX+THEAPP+MYSQL
+  stack NGINX+THEAPP+MYSQL.
   * On **Approach 1** we can find a docker-compose stack.
-  * On **Approach 2** a Docker Swarm stack with services with Autohealing
-  ,scale-up and scale-down capabilities, in addition load balancers throught
+  * On **Approach 2** a Docker Swarm stack with several services deployed with
+  autohealing,scale-up and scale-down capabilities, in addition load balancers throught
    `overlay` networks.
   * The **Approach 3** is a fully and modern infrastructure in AWS using ECS + RDS,
-   provisoned with Terraform on-the-fly and with Autoscaling Up/Down with Zero
+  provisoned with Terraform on-the-fly and with Autoscaling Up/Down with Zero
     Downtime.
 
 
@@ -73,24 +73,30 @@ like:
   to ensure some best practice designing Dockers like:
       - One process per Docker is must.
       - Reduction the amount of non-useful filesystem layers.
-      - Using the ENTRYPOINT as "parameter-watchdog" and sanitizer and CMD as executor of our "single process"
-      - Unix Signal collector using dumb-init to prevent Zombies.
+      - Using the ENTRYPOINT as "parameter-watchdog" and sanitizer,
+      likewise the CMD is used as executor of our "single process".
+      - Unix signals collector using dumb-init to prevent the Zombies processes.
 * **AutoHealing by default**: Using Swarm and ECS to ensure the max reliability out-the-box.
 * **Scaling and Autoscaling**: Using Swarm to scale services manually or ECS + Lambda
-    functions for Autoscaling Up/Down with Zero downtime
+    functions for Autoscaling Up/Down with Zero downtime.
 
 ## A rubber ring for the busy test-reviewer:
 I know, this is probably one more of dozens of TechTests that you should to review
-during a short period of time. However all of the approaches can be executed as
+during a short period of time. However the whole of the approaches can be executed as
 Vagrant VM in a easy way just typing:
 ```
 vagrant up --provision
 ```
-Anywise if you don't have time for it or something was wrong in my code,
-I provide you a tty example recorded in my own laptop that might be watched
-easily as a movie :-).
+>**Note:** The approach_3 needs some configuration parameters for the AWS
+credentials in `ansible/approach_03.yml` and also you should to review the
+default configuration file in `approach_03/conf/ecs_stack.yml` to prevent
+conflicts with your current subneting assignment.
 
-For each approach folder you can find inside a subfolder called "demo"
+Anywise if you don't have time for it or something was wrong in my code,
+I provide you a tty "demo" recorded in my own laptop that might be watched
+easily as a movie. :-)
+
+For each approach folder you can found inside a subfolder called "demo"
 as is showed below for the approach_0:
 
   ```
@@ -101,7 +107,7 @@ total 312
 
   ```
 These couple of files are the output of the script-scriptreplay execution
-you can find more information about script in https://github.com/karelzak/util-linux/tree/master/term-utils
+you can find more information about script in: [util-linux](https://github.com/karelzak/util-linux/tree/master/term-utils)
 
 This software is included in the util-linux package available for the most famous
 Linux distributions. I suggest you use a color terminal like xterm or gnome-terminal
@@ -116,7 +122,7 @@ ansible  approach_0  approach_1  approach_2  approach_3  doc  docker  README.MD 
 ╰─$ scriptreplay -d 10 --timing=approach_0/demo/approach0_tf approach_0/demo/approach0_lf
 ```
 
-`-d --divisor <num>`: speed up or slow down execution with time divisor
+`-d --divisor <num>`: speed up or slow down execution with time divisor.
 
 
 ## TODOs:
@@ -125,7 +131,7 @@ ansible  approach_0  approach_1  approach_2  approach_3  doc  docker  README.MD 
    SQS and ECS API to drain containers form some instance before scale down,
    ensuring the Zero Downtime. This approach is a little tricky and should be explained in detail.
 * **Monitoring**: one step beyound in Cloudwatch and other providers like
-  Prometheus or NewRelic
+  Prometheus or NewRelic.
 * **Refactoring**: The app by default it doesn't 100% docker friendly and it isn't
   to able to inform about his own state
 * **CQRS**: In the real world our apps usually needs Commands and Querys we should
