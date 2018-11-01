@@ -51,6 +51,14 @@ populate_app() {
     fi
 }
 
+# Disclamer: When we are using Docker doesn't make sense to use the loopback
+# interface cause the virtual-loopback is not available for binding ports,
+# to resolve this issue you should to add a reverse proxy (The Approach_0 use a
+# reverse proxy without docker) in the same Docker but that's in my opinion
+# a violation of one of the most important best practices in Docker: 
+# 1 process per Docker whenever possible.
+#
+# https://docs.docker.com/develop/develop-images/dockerfile_best-practices/
 hack_app() {
     sed -i "s/app.run()/app.run(host='0.0.0.0', port=5000)/g" /rtv_tt/app.py
 }
