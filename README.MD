@@ -41,10 +41,8 @@ vagrant plugin install vagrant-vbguest
     - Install Vagrant DMG using their wizard.
     - When the Vagrant setup ends, open a Terminal and type the following commands:
 
-          ```
-          vagrant plugin install vagrant-share;
-          vagrant plugin install vagrant-vbguest;
-          ```
+          vagrant plugin install vagrant-share
+          vagrant plugin install vagrant-vbguest
 
 ## What's an approach?
 I slipt across  several "approaches" for the challenge using for each one
