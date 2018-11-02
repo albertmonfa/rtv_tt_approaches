@@ -66,14 +66,11 @@ For each approach you can see the evolution in the architectures and some tools 
 like:
 
 * **Automation**: I used Ansible for everything in the Vagrant side and Terraform for AWS.
-* **Docker Friendly**: Docker is first of all a package system to delivery our applications,
-  likewise docker is very flexible and sometimes is not used in the correct way, I put all my bests
-  to ensure some best practice designing Dockers like:
-      - One process per Docker is must.
-      - Reduction the amount of non-useful filesystem layers.
-      - Using the ENTRYPOINT as "parameter-watchdog" and sanitizer,
-      likewise the CMD is used as executor of our "single process".
-      - Unix signals collector using dumb-init to prevent the Zombies processes.
+* **Docker Friendly**: Docker is first of all a package system to delivery our applications, likewise docker is very flexible and sometimes is not used in the correct way, I put all my bests to ensure some best practice designing Dockers like:
+ - One process per Docker is must.
+ - Reduction the amount of non-useful filesystem layers.
+ - Using the ENTRYPOINT as "parameter-watchdog" and sanitizer, likewise the CMD is used as executor of our "single process".
+ - Unix signals collector using dumb-init to prevent the Zombies processes.
 * **AutoHealing by default**: Using Swarm and ECS to ensure the max reliability out-the-box.
 * **Scaling and Autoscaling**: Using Swarm to scale services manually or ECS + Lambda
     functions for Autoscaling Up/Down with Zero downtime.
